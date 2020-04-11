@@ -9,4 +9,4 @@ const pool = new Pool({
 
 pool.connect();
 
-module.exports.connection = pool;
+module.exports = pool;
