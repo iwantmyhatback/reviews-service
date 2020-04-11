@@ -1,0 +1,18 @@
+### HTTP Request Route & Response Tests ###
+
+
+# List Reviews
+# GET http://localhost:8393/reviews/1/list
+
+# Product Reviews Metadata
+# GET http://localhost:8393/reviews/1/meta
+
+# Add Review To Product
+# POST http://localhost:8393/reviews/1
+
+# Mark Review As Helpful
+# PUT http://localhost:8393/reviews/helpful/1
+
+# Mark Review As Reported
+# PUT http://localhost:8393/reviews/report/1
+
