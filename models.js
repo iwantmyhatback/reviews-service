@@ -80,8 +80,8 @@ model.insertReview = function (product_id, requestBody) {
     summary: requestBody.summary,
     body: requestBody.body,
     recommend: requestBody.recommend,
-    reviewer_name: requestBody.reviewer_name,
-    reviewer_email: requestBody.reviewer_email,
+    reviewer_name: requestBody.name,
+    reviewer_email: requestBody.email,
     date: new Date().toISOString().split('T')[0],
   };
   let photosBody = {};
@@ -93,7 +93,7 @@ model.insertReview = function (product_id, requestBody) {
     // INSERT THE NEW REVIEW
     await connection
       .query(
-        'INSERT INTO reviews (rating, summary, body, recommend, reviewer_name, reviewer_email, date) VALUES ($1,$2,$3,$4,$5,$6,$7);',
+        'INSERT INTO reviews (rating, summary, body, recommend, reviewer_name, reviewer_email, date, helpfulness, reported) VALUES ($1,$2,$3,$4,$5,$6,$7,0,0);',
         [
           reviewBody.rating,
           reviewBody.summary,
@@ -217,24 +217,24 @@ model.insertReview = function (product_id, requestBody) {
       });
   }
 
-  tableInserter();
+  return tableInserter();
 };
 
 model.updateReviewHelpful = function (review_id) {
-  connection
+  return connection
     .query('UPDATE reviews SET helpfulness=helpfulness+1 WHERE review_id=$1', [review_id])
     .then((data) => {
       // console.log(data);
       console.log('*** Successfully Marked The Review Helpful In The Database [Reviews Table] ***');
     })
     .catch((error) => {
-      console.error(error);
+      // console.error(error);
       console.error('!!! Error Marking The Review Helpful In The Database [Reviews Table] !!!');
     });
 };
 
 model.updateReviewReported = function (review_id) {
-  connection
+  return connection
     .query('UPDATE reviews SET reported=1 WHERE review_id=$1', [review_id])
     .then((data) => {
       // console.log(data);

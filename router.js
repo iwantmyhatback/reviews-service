@@ -3,37 +3,34 @@ const router = express.Router();
 const controller = require('./controllers.js');
 
 router.route('/:product_id/list').get((req, res) => {
-  controller.sendReviewList(req, res).then(() => {
+  controller.sendReviewList(req, res).then((data) => {
     res.status(200);
-    res.send(' Return List Of Reviews');
+    res.send(data);
   });
 });
 
 router.route('/:product_id/meta').get((req, res) => {
-  controller.sendProductMetadata(req, res).then(() => {
+  controller.sendProductMetadata(req, res).then((data) => {
     res.status(200);
-    res.send('Return Product Reviews Metadata');
+    res.send(data);
   });
 });
 
 router.route('/:product_id').post((req, res) => {
   controller.addReview(req, res).then(() => {
-    res.status(201);
-    res.send('Add Review To Product');
+    res.sendStatus(201);
   });
 });
 
 router.route('/helpful/:review_id').put((req, res) => {
   controller.markReviewHelpful(req, res).then(() => {
-    res.status(204);
-    res.send('Mark Review Helpful');
+    res.sendStatus(204);
   });
 });
 
 router.route('/report/:review_id').put((req, res) => {
   controller.markReviewReported(req, res).then(() => {
-    res.status(204);
-    res.send('Mark Review Reported');
+    res.sendStatus(204);
   });
 });
 
