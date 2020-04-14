@@ -23,6 +23,7 @@
     "pg": "^8.0.2"
   },
   "devDependencies": {
+    "cors": "^2.8.5",
     "morgan": "^1.10.0"
   }
 }

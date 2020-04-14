@@ -1,4 +1,5 @@
 const model = require('./models.js');
+const paginator = require('./paginator.js');
 const controller = {};
 
 controller.sendReviewList = function (req, res) {
@@ -7,11 +8,18 @@ controller.sendReviewList = function (req, res) {
     .then((data) => {
       // console.log(data);
       console.log('*** Controller Successfully Retrieved Product Reviews From Model ***');
-      return data.results;
+      let response = {
+        product: req.params.product_id,
+        page: req.query.page,
+        count: req.query.count,
+        results: paginator(data.rows, req.query.count, req.query.page),
+      };
+      console.log('*** Controller Successfully Transformed Product Reviews Response ***');
+      return response;
     })
     .catch((error) => {
       // console.error(error);
-      console.error('!!! Controller Error Retrieving Product Reviews From Model !!!');
+      console.error('!!! Controller Error Retrieving Product Reviews From Model Or Transforming Response Data !!!');
     });
 };
 
@@ -19,7 +27,7 @@ controller.sendProductMetadata = function (req, res) {
   return model
     .queryProductMetadata(req.params.product_id)
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       console.log('*** Controller Successfully Retrieved Product Metadata From Model ***');
       return data;
     })

@@ -9,14 +9,7 @@ model.queryProductReviews = function (product_id) {
     .then((data) => {
       // console.log(data.rows);
       console.log('*** Successfully Queried Reviews By Product From Database ***');
-      ////////Need to handle pagination of response object
-      let response = {
-        product: product_id,
-        page: 0,
-        count: data.rows.length,
-        results: data.rows,
-      };
-      return response;
+      return data;
     })
     .catch((error) => {
       // console.error(error);
@@ -25,6 +18,7 @@ model.queryProductReviews = function (product_id) {
 };
 
 model.queryProductMetadata = function (product_id) {
+  // console.log(product_id);
   return connection
     .query(
       'SELECT pm.*,ch.characteristic_id,ch.value, cn.name \
@@ -44,10 +38,11 @@ model.queryProductMetadata = function (product_id) {
       //Set Product Data To Response Object
       let response = {
         product: product_id,
-        ratings: data.rows[0] ? data.rows[0].ratings : null,
-        recommended: data.rows[0] ? data.rows[0].recommended : null,
+        ratings: data.rows[0] ? data.rows[0].ratings : { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
+        recommended: data.rows[0] ? data.rows[0].recommended : { 0: 0, 1: 0 },
         data: data.rows,
       };
+      // console.log(response);
       return response;
     })
     .then((data) => {
@@ -115,12 +110,10 @@ model.insertReview = function (product_id, requestBody) {
 
     // GET BACK THE REVIEW ID
     await connection
-      .query('SELECT * FROM reviews ORDER BY review_id DESC LIMIT 1;')
+      .query('SELECT review_id FROM reviews ORDER BY review_id DESC LIMIT 1;')
       .then((data2) => {
         // console.log(data2);
-        console.log(
-          '*** Successfully Queried Newly Inserted Review With review_id From The Database [Reviews Table] ***'
-        );
+        console.log("*** Successfully Queried Newly Inserted Review's review_id From The Database [Reviews Table] ***");
         review_id = data2.rows[0].review_id;
       })
       .catch((error) => {
