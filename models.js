@@ -1,18 +1,24 @@
 const connection = require('./database.js');
 const model = {};
 
-model.queryProductReviews = function (product_id) {
+model.queryProductReviews = function (product_id, sort) {
+  let translateSort = {
+    newest: 'ORDER BY date DESC',
+    helpful: 'ORDER BY helpfulness DESC',
+    relevant: 'ORDER BY helpfulness DESC, date DESC',
+  };
   return connection
-    .query('SELECT r.* FROM product_reviews pr INNER JOIN reviews r ON r.review_id=pr.review_id WHERE product_id=$1', [
-      product_id,
-    ])
+    .query(
+      `SELECT r.* FROM product_reviews pr INNER JOIN reviews r ON r.review_id=pr.review_id WHERE product_id=$1 ${translateSort[sort]}`,
+      [product_id]
+    )
     .then((data) => {
       // console.log(data.rows);
       console.log('*** Successfully Queried Reviews By Product From Database ***');
       return data;
     })
     .catch((error) => {
-      // console.error(error);
+      console.error(error);
       console.error('!!! Error Querying Reviews By Product From Database !!!');
     });
 };

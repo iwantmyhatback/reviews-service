@@ -4,7 +4,7 @@ const controller = {};
 
 controller.sendReviewList = function (req, res) {
   return model
-    .queryProductReviews(req.params.product_id)
+    .queryProductReviews(req.params.product_id, req.query.sort)
     .then((data) => {
       // console.log(data);
       console.log('*** Controller Successfully Retrieved Product Reviews From Model ***');
