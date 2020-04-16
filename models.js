@@ -1,7 +1,7 @@
 const connection = require('./database.js');
 const model = {};
 
-model.queryProductReviews = function (product_id, sort) {
+model.queryProductReviews = function (product_id, sort = 'relevant') {
   let translateSort = {
     newest: 'ORDER BY date DESC',
     helpful: 'ORDER BY helpfulness DESC',
