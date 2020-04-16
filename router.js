@@ -1,6 +1,8 @@
 const express = require('express');
-const router = express.Router();
+const path = require('path');
 const controller = require('./controllers.js');
+
+const router = express.Router();
 
 router.route('/reviews/:product_id/list').get((req, res) => {
   controller.sendReviewList(req, res).then((data) => {
@@ -35,7 +37,7 @@ router.route('/reviews/report/:review_id').put((req, res) => {
 });
 
 router.route('/loaderio-147a84b1e50511e59e780e6fb634d9b3/').get((req, res) => {
-  res.sendFile('./loader.txt');
+  res.sendFile(path.join(__dirname, './loader.txt'));
 });
 
 module.exports = router;
