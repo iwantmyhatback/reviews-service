@@ -9,8 +9,8 @@ const app = express();
 app.use(cors());
 
 app.use(bodyParser.json());
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 
-app.use('/reviews', router);
+app.use('/', router);
 
 app.listen(8393, () => console.log('*** Reviews-Service is listening at http://localhost:8393 ***'));
