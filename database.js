@@ -1,8 +1,8 @@
 const { Pool } = require('pg');
 const pool = new Pool({
-  host: '52.200.147.255',
-  user: 'hackreactor',
-  password: 'password',
+  host: process.env.DBSERVER,
+  user: process.env.SQLUSER,
+  password: process.env.SQLPASS,
   database: 'sdc',
   idleTimeoutMillis: 5000,
 });
