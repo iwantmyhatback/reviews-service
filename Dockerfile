@@ -1,5 +1,5 @@
 FROM node:12
-WORKDIR /home/ubuntu/reviews-service
+WORKDIR /usr/src/reviews-service
 COPY package*.json ./
 RUN npm install
 COPY . .

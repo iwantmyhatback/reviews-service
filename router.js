@@ -34,4 +34,8 @@ router.route('/report/:review_id').put((req, res) => {
   });
 });
 
+router.route('../loaderio-147a84b1e50511e59e780e6fb634d9b3/').get((req,res)=>{
+  res.sendFile('./loader.txt');
+})
+
 module.exports = router;
