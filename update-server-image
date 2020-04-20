@@ -1,0 +1,5 @@
+#! /bin/bash
+
+docker image rm iwantmyhatback/sdc-api:latest
+docker build -t iwantmyhatback/sdc-api . 
+docker push iwantmyhatback/sdc-api:latest  
