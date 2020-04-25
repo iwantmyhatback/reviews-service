@@ -1,2 +1,7 @@
 # reviews-service
-Service to store and respond to requests for review related data
+
+#### Summary
+Redesign of an existing Server API Service to store and respond to requests for product review data and reviews of that products characteristics. The service also tracks review meta-data such as 'Helfulness' rating and 'Reported' status and displays reviews based on helpfulness, date, or relevance (exempting all reported reviews).
+
+#### Breakdown of Redesign
+Service needed to be redesigned due to poor database management and inability to handle current web traffic at high loads.  Redesign entailed implmenting a [nginx load balancer](https://nginx.org/en/docs/http/load_balancing.html) to distribute traffic in a [least connected](https://nginx.org/en/docs/http/load_balancing.html#nginx_load_balancing_methods) method to multiple servers (tested on up to 6). API was redesigned to use [ExpressJS](https://expressjs.com/) RESTful routing of HTTP requests, and serving and manipulating data. Data is stored in a [Postgres](https://www.postgresql.org/) database server making use of the JSON format to store characteristic reviews of products which decreased the size of the original database by roughly 18%. The Database is supported under high load by individual [Redis Caches](https://redis.io/) on each implemented API server which have bene tested with caching up to 2 minutes on low-memory server instances (1GB) and 5 minutes on servers with higher memory levels (16GB). Ultimately These changes were able to raise the maximum load to nearly 400% of the original maximum possible responses below 2000ms
