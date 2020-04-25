@@ -36,7 +36,7 @@ router.route('/reviews/report/:review_id').put((req, res) => {
   });
 });
 
-router.route('/loaderio-147a84b1e50511e59e780e6fb634d9b3/').get((req, res) => {
+router.route('/loaderio-2371791831d68535e038000e6e377d44.txt').get((req, res) => {
   res.sendFile(path.join(__dirname, './loader.txt'));
 });
 
