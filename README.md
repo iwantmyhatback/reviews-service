@@ -13,3 +13,6 @@ Data is stored in [Postgres](https://www.postgresql.org/) database server(s) mak
 
 The Database is supported under high load by individual [Redis Caches](https://redis.io/) on each implemented API server which have bene tested with caching up to 2 minutes on low-memory server instances (1GB) and 5 minutes on servers with higher memory levels (16GB). Ultimately These changes were able to raise the maximum load to nearly 400% of the original maximum possible responses below 2000ms
 
+### Visualization
+
+![achitechture](https://github.com/iwantmyhatback/reviews-service/blob/master/planning/architecture.png)
