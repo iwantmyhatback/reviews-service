@@ -1,0 +1,10 @@
+#! /bin/bash
+
+sudo \apt update 
+sudo \apt upgrade -y
+sudo \apt install docker.io -y
+sudo \docker stop deploy
+sudo \docker rm deploy
+sudo \docker pull iwantmyhatback/sdc-api
+sudo \docker run --name deploy -p 80:8393 -e SQLUSER=$SQLUSER -e SQLPASS=$SQLPASS -e DBSERVER=$DBSERVER -d iwantmyhatback/sdc-api:latest
+sudo \docker container ls -a

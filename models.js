@@ -14,7 +14,7 @@ model.queryProductReviews = function (product_id, sort = 'relevant') {
     )
     .then((data) => {
       // console.log(data.rows);
-      console.log('*** Successfully Queried Reviews By Product From Database ***');
+      // console.log('*** Successfully Queried Reviews By Product From Database ***');
       return data;
     })
     .catch((error) => {
@@ -37,11 +37,7 @@ model.queryProductMetadata = function (product_id) {
     )
     .then((data) => {
       // console.log(data.rows);
-      console.log('*** Successfully Queried Product Metadata From Database ***');
-      return data;
-    })
-    .then((data) => {
-      //Set Product Data To Response Object
+      // console.log('*** Successfully Queried Product Metadata From Database ***');
       let response = {
         product: product_id,
         ratings: data.rows[0] ? data.rows[0].ratings : { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
@@ -51,11 +47,10 @@ model.queryProductMetadata = function (product_id) {
       // console.log(response);
       return response;
     })
-    .then((data) => {
+    .then((response) => {
       //Set Individual Characteristic Review Data To Response Object
-      let response = data;
       let characteristics = {};
-      for (let row of data.data) {
+      for (let row of response.data) {
         let temp = {
           [row.name]: {
             id: row.characteristic_id,
@@ -107,7 +102,7 @@ model.insertReview = function (product_id, requestBody) {
       )
       .then((data) => {
         // console.log(data);
-        console.log('*** Successfully Inserted New Review Into The Database [Reviews Table] ***');
+        // console.log('*** Successfully Inserted New Review Into The Database [Reviews Table] ***');
       })
       .catch((error) => {
         // console.error(error);
@@ -119,7 +114,7 @@ model.insertReview = function (product_id, requestBody) {
       .query('SELECT review_id FROM reviews ORDER BY review_id DESC LIMIT 1;')
       .then((data2) => {
         // console.log(data2);
-        console.log("*** Successfully Queried Newly Inserted Review's review_id From The Database [Reviews Table] ***");
+        // console.log("*** Successfully Queried Newly Inserted Review's review_id From The Database [Reviews Table] ***");
         review_id = data2.rows[0].review_id;
       })
       .catch((error) => {
@@ -131,7 +126,7 @@ model.insertReview = function (product_id, requestBody) {
     connection
       .query('INSERT INTO product_reviews (product_id, review_id) VALUES ($1, $2);', [product_id, review_id])
       .then((data) => {
-        console.log('*** Successfully Inserted New review_id:product_id Into The Database [Product_Reviews Table] ***');
+        // console.log('*** Successfully Inserted New review_id:product_id Into The Database [Product_Reviews Table] ***');
         return data;
       })
       .catch((error) => {
@@ -143,7 +138,7 @@ model.insertReview = function (product_id, requestBody) {
     connection
       .query('INSERT INTO photos (review_id, photos) VALUES ($1, $2);', [review_id, photosBody])
       .then((data) => {
-        console.log("*** Successfully Inserted New Review's Photos Into The Database [Photos Table] ***");
+        // console.log("*** Successfully Inserted New Review's Photos Into The Database [Photos Table] ***");
         return data;
       })
       .catch((error) => {
@@ -160,9 +155,9 @@ model.insertReview = function (product_id, requestBody) {
           [key]
         )
         .then((data) => {
-          console.log(
-            "*** Successfully Updated Characteristic Rating 'count' In The Database [Characteristic Table] ***"
-          );
+          // console.log(
+          //   "*** Successfully Updated Characteristic Rating 'count' In The Database [Characteristic Table] ***"
+          // );
           return data;
         })
         .catch((error) => {
@@ -176,9 +171,9 @@ model.insertReview = function (product_id, requestBody) {
           key,
         ])
         .then((data) => {
-          console.log(
-            "*** Successfully Updated Characteristic Rating 'total' In The Database [Characteristic Table] ***"
-          );
+          // console.log(
+          //   "*** Successfully Updated Characteristic Rating 'total' In The Database [Characteristic Table] ***"
+          // );
           return data;
         })
         .catch((error) => {
@@ -193,7 +188,7 @@ model.insertReview = function (product_id, requestBody) {
         `UPDATE product_metadata SET ratings = jsonb_set(ratings, '{${requestBody.rating}}', (COALESCE(ratings->>'${requestBody.rating}','0')::int + 1)::text::jsonb) WHERE product_id=${product_id}`
       )
       .then((data) => {
-        console.log('*** Successfully Updated Product Ratings In The Database [Product_Metadata Table] ***');
+        // console.log('*** Successfully Updated Product Ratings In The Database [Product_Metadata Table] ***');
         return data;
       })
       .catch((error) => {
@@ -207,7 +202,7 @@ model.insertReview = function (product_id, requestBody) {
         `UPDATE product_metadata SET recommended = jsonb_set(recommended, '{${requestBody.recommend}}', (COALESCE(recommended->>'${requestBody.recommend}','0')::int + 1)::text::jsonb) WHERE product_id=${product_id}`
       )
       .then((data) => {
-        console.log('*** Successfully Updated Number Of Recommendations In The Database [Product_Metadata Table] ***');
+        // console.log('*** Successfully Updated Number Of Recommendations In The Database [Product_Metadata Table] ***');
         return data;
       })
       .catch((error) => {
@@ -224,7 +219,7 @@ model.updateReviewHelpful = function (review_id) {
     .query('UPDATE reviews SET helpfulness=helpfulness+1 WHERE review_id=$1', [review_id])
     .then((data) => {
       // console.log(data);
-      console.log('*** Successfully Marked The Review Helpful In The Database [Reviews Table] ***');
+      // console.log('*** Successfully Marked The Review Helpful In The Database [Reviews Table] ***');
     })
     .catch((error) => {
       // console.error(error);
@@ -237,7 +232,7 @@ model.updateReviewReported = function (review_id) {
     .query('UPDATE reviews SET reported=1 WHERE review_id=$1', [review_id])
     .then((data) => {
       // console.log(data);
-      console.log('*** Successfully Reported The Review In The Database [Reviews Table] ***');
+      // console.log('*** Successfully Reported The Review In The Database [Reviews Table] ***');
     })
     .catch((error) => {
       // console.error(error);

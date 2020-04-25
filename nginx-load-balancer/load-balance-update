@@ -1,0 +1,7 @@
+#! /bin/bash
+
+sudo \docker stop deploy
+sudo \docker rm deploy
+sudo \docker build -t sdc-lb .
+sudo \docker container run --name deploy -p 80:80 -d sdc-lb
+sudo \docker ps

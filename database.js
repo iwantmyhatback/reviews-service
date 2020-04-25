@@ -5,6 +5,7 @@ const pool = new Pool({
   password: process.env.SQLPASS,
   database: 'sdc',
   idleTimeoutMillis: 5000,
+  max: 14,
 });
 
 pool.connect();
