@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const router = require('./router.js');
 const cors = require('cors');
+const port = process.env.PORT || 8393;
 
 const app = express();
 
@@ -13,4 +14,4 @@ app.use(morgan('dev'));
 
 app.use('/', router);
 
-app.listen(8393, () => console.log('*** Reviews-Service is listening at port 8393 ***'));
+app.listen(port, () => console.log(`*** Reviews-Service is listening on port ${port} ***`));

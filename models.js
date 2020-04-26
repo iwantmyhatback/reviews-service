@@ -13,18 +13,14 @@ model.queryProductReviews = function (product_id, sort = 'relevant') {
       [product_id]
     )
     .then((data) => {
-      // console.log(data.rows);
-      // console.log('*** Successfully Queried Reviews By Product From Database ***');
       return data;
     })
     .catch((error) => {
-      console.error(error);
       console.error('!!! Error Querying Reviews By Product From Database !!!');
     });
 };
 
 model.queryProductMetadata = function (product_id) {
-  // console.log(product_id);
   return connection
     .query(
       'SELECT pm.*,ch.characteristic_id,ch.value, cn.name \
@@ -36,15 +32,12 @@ model.queryProductMetadata = function (product_id) {
       [product_id]
     )
     .then((data) => {
-      // console.log(data.rows);
-      // console.log('*** Successfully Queried Product Metadata From Database ***');
       let response = {
         product: product_id,
         ratings: data.rows[0] ? data.rows[0].ratings : { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 },
         recommended: data.rows[0] ? data.rows[0].recommended : { 0: 0, 1: 0 },
         data: data.rows,
       };
-      // console.log(response);
       return response;
     })
     .then((response) => {
@@ -64,7 +57,6 @@ model.queryProductMetadata = function (product_id) {
       return response;
     })
     .catch((error) => {
-      // console.error(error);
       console.error('!!! Error Querying Product Metadata From Database !!!');
     });
 };
@@ -86,7 +78,7 @@ model.insertReview = function (product_id, requestBody) {
   }
 
   async function tableInserter() {
-    // INSERT THE NEW REVIEW
+    // Insert the new reviews
     await connection
       .query(
         'INSERT INTO reviews (rating, summary, body, recommend, reviewer_name, reviewer_email, date, helpfulness, reported) VALUES ($1,$2,$3,$4,$5,$6,$7,0,0);',
@@ -100,53 +92,41 @@ model.insertReview = function (product_id, requestBody) {
           reviewBody.date,
         ]
       )
-      .then((data) => {
-        // console.log(data);
-        // console.log('*** Successfully Inserted New Review Into The Database [Reviews Table] ***');
-      })
       .catch((error) => {
-        // console.error(error);
         console.error('!!! Error Inserting New Review Into The Database [Reviews Table] !!!');
       });
 
-    // GET BACK THE REVIEW ID
+    // Get back the review ID
     await connection
       .query('SELECT review_id FROM reviews ORDER BY review_id DESC LIMIT 1;')
       .then((data2) => {
-        // console.log(data2);
-        // console.log("*** Successfully Queried Newly Inserted Review's review_id From The Database [Reviews Table] ***");
         review_id = data2.rows[0].review_id;
       })
       .catch((error) => {
-        // console.error(error);
         console.error('!!! Error Querying Newly Inserted Review With review_id From The Database [Reviews Table] !!!');
       });
 
-    // CONNECT THE NEW REVIEW TO ITS PRODUCT
+    // Connect the new review to its product
     connection
       .query('INSERT INTO product_reviews (product_id, review_id) VALUES ($1, $2);', [product_id, review_id])
       .then((data) => {
-        // console.log('*** Successfully Inserted New review_id:product_id Into The Database [Product_Reviews Table] ***');
         return data;
       })
       .catch((error) => {
-        // console.error(error);
         console.error('!!! Error Inserting New review_id:product_id Into The Database [Product_Reviews Table] !!!');
       });
 
-    // INSERT PHOTOS UNDER APPROPRIATE REVIEW ID
+    // Insert photos under the appropriate review id
     connection
       .query('INSERT INTO photos (review_id, photos) VALUES ($1, $2);', [review_id, photosBody])
       .then((data) => {
-        // console.log("*** Successfully Inserted New Review's Photos Into The Database [Photos Table] ***");
         return data;
       })
       .catch((error) => {
-        // console.error(error);
         console.error("!!! Error Inserting New Review's Photos Into The Database [Photos Table] !!!");
       });
 
-    // UPDATE CHARACTERISTIC REVIEWS WITH NEW VALUES
+    // Update characteristic reviews with new values
     for (let key in requestBody.characteristics) {
       connection
         .query(
@@ -154,14 +134,7 @@ model.insertReview = function (product_id, requestBody) {
         WHERE characteristic_id=$1`,
           [key]
         )
-        .then((data) => {
-          // console.log(
-          //   "*** Successfully Updated Characteristic Rating 'count' In The Database [Characteristic Table] ***"
-          // );
-          return data;
-        })
         .catch((error) => {
-          // console.error(error);
           console.error("!!! Error Inserting New Review's Photos Into The Database [Photos Table] !!!");
         });
 
@@ -170,14 +143,7 @@ model.insertReview = function (product_id, requestBody) {
           requestBody.characteristics[key],
           key,
         ])
-        .then((data) => {
-          // console.log(
-          //   "*** Successfully Updated Characteristic Rating 'total' In The Database [Characteristic Table] ***"
-          // );
-          return data;
-        })
         .catch((error) => {
-          console.error(error);
           console.error("!!! Error Updating Characteristic Rating 'total' In The Database [Characteristic Table] !!!");
         });
     }
@@ -187,26 +153,16 @@ model.insertReview = function (product_id, requestBody) {
       .query(
         `UPDATE product_metadata SET ratings = jsonb_set(ratings, '{${requestBody.rating}}', (COALESCE(ratings->>'${requestBody.rating}','0')::int + 1)::text::jsonb) WHERE product_id=${product_id}`
       )
-      .then((data) => {
-        // console.log('*** Successfully Updated Product Ratings In The Database [Product_Metadata Table] ***');
-        return data;
-      })
       .catch((error) => {
-        console.error(error);
         console.error('!!! Error Updating Product Ratings In The Database [Product_Metadata Table] !!!');
       });
 
-    // UPDATE PRODUCT METADATA RECOMMENDED
+    // Update product metadata recommended
     connection
       .query(
         `UPDATE product_metadata SET recommended = jsonb_set(recommended, '{${requestBody.recommend}}', (COALESCE(recommended->>'${requestBody.recommend}','0')::int + 1)::text::jsonb) WHERE product_id=${product_id}`
       )
-      .then((data) => {
-        // console.log('*** Successfully Updated Number Of Recommendations In The Database [Product_Metadata Table] ***');
-        return data;
-      })
       .catch((error) => {
-        // console.error(error);
         console.error('!!! Error Updating Number Of Recommendations In The Database [Product_Metadata Table] !!!');
       });
   }
@@ -217,27 +173,15 @@ model.insertReview = function (product_id, requestBody) {
 model.updateReviewHelpful = function (review_id) {
   return connection
     .query('UPDATE reviews SET helpfulness=helpfulness+1 WHERE review_id=$1', [review_id])
-    .then((data) => {
-      // console.log(data);
-      // console.log('*** Successfully Marked The Review Helpful In The Database [Reviews Table] ***');
-    })
     .catch((error) => {
-      // console.error(error);
       console.error('!!! Error Marking The Review Helpful In The Database [Reviews Table] !!!');
     });
 };
 
 model.updateReviewReported = function (review_id) {
-  return connection
-    .query('UPDATE reviews SET reported=1 WHERE review_id=$1', [review_id])
-    .then((data) => {
-      // console.log(data);
-      // console.log('*** Successfully Reported The Review In The Database [Reviews Table] ***');
-    })
-    .catch((error) => {
-      // console.error(error);
-      console.error('!!! Error Reporting The Review In The Database [Reviews Table] !!!');
-    });
+  return connection.query('UPDATE reviews SET reported=1 WHERE review_id=$1', [review_id]).catch((error) => {
+    console.error('!!! Error Reporting The Review In The Database [Reviews Table] !!!');
+  });
 };
 
 module.exports = model;
