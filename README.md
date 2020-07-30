@@ -1,7 +1,7 @@
 # Reviews Module Service
 
 ### Summary
-Redesign of an existing Server API Service to store and respond to requests for product review data and reviews of that products characteristics. The service also tracks review meta-data such as 'Helfulness' rating and 'Reported' status and displays reviews based on helpfulness, date, or relevance (exempting all reported reviews).
+Redesign of an existing Server API Service to store and respond to requests for product review data and reviews of that products characteristics. The service also tracks review meta-data such as 'Helpfulness' rating and 'Reported' status and displays reviews based on helpfulness, date, or relevance (exempting all reported reviews).
 
 ### Migration
 Data was extracted from existing SQL database into 4 CSV files each representing a table from the existing database, a custom [ETL process](https://en.wikipedia.org/wiki/Extract,_transform,_load) was then designed using Javascript and Postgres on a local machine to insert data into the new database format. That process can be found here: [Reviews ETL](https://github.com/iwantmyhatback/sdc_etl). The data was then [pg_dump](https://www.postgresql.org/docs/12/app-pgdump.html)'ed from Postgres local and uploaded to the database server(s) using [psql](http://postgresguide.com/utilities/psql.html)
