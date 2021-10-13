@@ -11,7 +11,7 @@ This service needed to be redesigned due to poor database management (Large amou
 
 Data is stored in [Postgres](https://www.postgresql.org/) database server(s) making use of the JSON format to store characteristic reviews of products which decreased the size of the original database by roughly 18%. Database replication using a [Warm-Standby](https://www.postgresql.org/docs/9.1/warm-standby.html) provides data redundancy and performance reliability should the main server fail. 
 
-The Database is supported under high load by individual [Redis Caches](https://redis.io/) on each implemented API server which have bene tested with caching up to 2 minutes on low-memory server instances (1GB) and 5 minutes on servers with higher memory levels (16GB). Ultimately These changes were able to raise the maximum load to nearly 400% of the original maximum possible responses below 2000ms
+The Database is supported under high load by individual [Redis Caches](https://redis.io/) on each implemented API server which have been tested with caching up to 2 minutes on low-memory server instances (1GB) and 5 minutes on servers with higher memory levels (16GB). Ultimately These changes were able to raise the maximum load to nearly 400% of the original maximum possible responses below 2000ms
 
 ### Deployment
 All parts of the redesign were developed using [Docker](https://www.docker.com/) to make deployment and scaling up fast and painless, this also enables the use of server side shell scripting to deploy to and update instances from DockerHub (manually or scheduled) quickly and easily
